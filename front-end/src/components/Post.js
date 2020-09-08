@@ -1,17 +1,19 @@
 import React from 'react';
-import {
-    useParams
-  } from 'react-router-dom';
+import * as Markdown from 'react-markdown';
+
+import { useParams } from 'react-router-dom';
 
 
 function Post(props) {
     const { slug } = useParams();
     const post = props.BlogPosts[slug];
-    const { blogTitle, markdownBody } = post;
+    const { blogTitle, markdownBody, postedDate} = post;
     return (
       <div style={{ padding: 20 }}>
         <h3>{blogTitle}</h3>
-        {/* <p>{author}</p> */}
+        <span>{post.author.fields.blogAuthors}</span>
+        <span>{new Date(postedDate).toLocaleString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})}</span>
+        <Markdown source={markdownBody} escapeHtml={false}/>
       </div>
     );
   }
