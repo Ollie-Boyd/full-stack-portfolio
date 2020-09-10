@@ -1,13 +1,14 @@
 import React from 'react';
 import * as Markdown from 'react-markdown';
-
 import { useParams } from 'react-router-dom';
+import CodeBlock from './CodeBlock'
+
 
 
 function Post(props) {
     const { slug } = useParams();
     const post = props.BlogPosts[slug];
-    const { blogTitle, markdownBody, postedDate, datePretty, tags, author} = post;
+    const { blogTitle, markdownBody, datePretty, tags, author} = post;
 
     
     const tagList = tags.map( (tag, index) =>
@@ -21,7 +22,7 @@ function Post(props) {
         <ul>{tagList}</ul>
         <span>{author}</span>
         <span>{datePretty}</span>
-        <Markdown source={markdownBody} escapeHtml={false}/>
+        <Markdown source={markdownBody} escapeHtml={false} renderers={{ code: CodeBlock }}/>
       </div>
     );
   }
