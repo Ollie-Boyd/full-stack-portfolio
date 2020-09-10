@@ -42,12 +42,19 @@ function App() {
       const resp = await client.getEntries({
         content_type: 'blogPost'
       })
-      const map1 = resp.items.map(x => x.fields)
-      const map2 = map1.reduce((obj, item) => ({...obj, [item.customPath]: item}) ,{});
+      const onlyFields = resp.items.map(x => x.fields)
+      const cleanedUpFields = onlyFields.map( post => {
+        post.author = post.author.fields.blogAuthors;
+        post.tags = post.tags.map(tag => tag.fields.tagNames);
+        post.datePretty = new Date(post.postedDate).toLocaleString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})
+        return post;
+      })
+      // spread properties to object literals. It copies own enumerable properties from a provided object onto a new object.
 
-      console.log(map1)
-      console.log(map2)
-      setData(map2);
+      //Shallow-cloning (excluding prototype) or merging of objects is now possible using a shorter syntax than Object.assign().
+      const convertArrayOfObjectsToObject = cleanedUpFields.reduce((obj, item) => ({...obj, [item.customPath]: item}) ,{});
+      console.log(convertArrayOfObjectsToObject);
+      setData(convertArrayOfObjectsToObject);
       // ...
     }
     fetchData();
